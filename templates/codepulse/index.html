@@ -1,0 +1,84 @@
+{% extends "layout.html" %}
+{% block title %} blogHome {% endblock %}
+{% block blogactive %}active{% endblock %}
+{% block css %} 
+.post-headings > a{
+    color:black;
+    text-decoration:none;
+}
+.post-headings > a > h2{
+    font-weight:800;
+}
+.post-headings > a:hover{
+    color:#0085a1;
+}
+.post-headings > img{
+    width: 100%;
+    height:350px;
+    object-fit: cover;
+}
+.step-links a{
+    border-radius : 0 !important;
+}
+{% endblock %}
+{% block body %}
+{% load humanize %}
+<div class="container px-4 px-lg-5 my-4">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+            <h1 class="">Popular Articles By CodePulse:</h1>
+            <!-- Post preview-->
+            {% for blog in page_obj %}
+            <div class="post-preview" style="margin-top: 20px;">
+                <div class="post-headings d-flex flex-column">
+                    <img src="{{ blog.image.url }}" alt="">
+                    <a href="/codepulse/{{blog.slug}}" class="mt-3">
+                        <h2 class="post-title">{{ blog.title }}</h2>
+                        <h3 class="post-subtitle">{{ blog.thead0 }}</h3>
+                    </a></div>
+                <p class="post-meta">
+                    <a href="/codepulse/{{blog.slug}}">Continue Reading...</a>
+                    Posted by
+                    <a href="#!">{{blog.pub_by}}</a>
+                    {{blog.pub_date|naturalday}}
+                </p>
+            </div>
+            <!-- Divider-->
+            <hr class="my-4">
+            {% endfor %}
+            <!-- Post preview-->
+            
+            <!-- Post preview-->
+            <!-- todo: fetch it using for loop from the database    -->
+                <!-- Pagination controls -->
+                <!-- Debug: Display current page and pagination status -->
+{% comment %} <p>Current Page: {{ page_obj.number }}</p>
+<p>Has Previous: {{ page_obj.has_previous }}</p>
+<p>Has Next: {{ page_obj.has_next }}</p> {% endcomment %}
+
+                <div class="pagination">
+                    <div class="step-links" style="display: flex;justify-content: space-between;width: 100%;">
+                        {% if page_obj.has_previous %}
+                        <div class="previous-buttons">
+                            <a href="?page=1" class="btn btn-danger" role="button">&laquo; first</a>
+                            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-danger" role="button">previous</a>
+                        </div>
+                        {% endif %}
+                        <span class="current">
+                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                        </span>
+                        {% if page_obj.has_next %}
+                        <div class="next-buttons">
+                        <a href="?page={{ page_obj.next_page_number }}" class="btn btn-danger" role="button">next</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-danger" role="button">last &raquo;</a>
+                    </div>
+                    {% endif %}                   
+                 </div>
+                </div>
+
+            
+        </div>
+    </div>
+</div>
+
+{% endblock %}

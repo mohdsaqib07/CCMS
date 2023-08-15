@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block title %} About Us - CodePulse.com {% endblock %}
+{% block aboutactive %}active{% endblock %}
+{% block css %}
+.about-content {
+    margin-top: 30px;
+    font-size: 18px;
+    line-height: 1.6;
+  }
+{% endblock %}
+{%  load static %}
+{% block headerbackgound %}
+url(' {% static "./home/aboutus.jpg" %}')
+{% endblock %}
+{% block body %}
+
+<div class="container my-4">
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <h1 class="text-center">About Us</h1>
+        <article>
+        <div class="about-content">
+          <p>Welcome to <strong>CodePulse.com</strong>, your go-to destination for tech-related articles, tutorials, and insights.</p>
+          <p>Our mission is to provide valuable and up-to-date information on a wide range of technology topics, from programming languages and frameworks to software development practices.</p>
+          <p>Whether you're a beginner or an experienced developer, our goal is to empower you with knowledge and resources that will help you excel in your tech journey.</p>
+          <p>Stay tuned for informative and engaging content that will help you stay ahead in the fast-paced world of technology.</p>
+        </div></article>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

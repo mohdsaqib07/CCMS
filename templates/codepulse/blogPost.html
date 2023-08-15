@@ -1,0 +1,246 @@
+{% extends "layout.html" %}
+{% block title %} {{blog.title}} {% endblock %}
+{% block css %}
+article h2{
+font-weight:800;
+}
+article h4{
+font-weight:550;
+}
+.first-paragraph{
+display:flex;
+flex-direction:row;
+}
+@media screen and (max-width:500px){
+.first-paragraph{
+flex-direction : column-reverse;
+}
+.first-paragraph > img{
+
+width:50%;
+}
+}
+.post-content{
+word-spacing:3px;
+}
+.comment-form input[type=text]{
+width: 100%;
+padding: 6px 6px;
+outline: none;border: none;
+border-bottom: var(--bs-border-width) solid var(--bs-border-color);
+}
+.comment-form #comment-label{
+margin-left: 6px;
+position: relative;
+top: 26px;
+z-index: 2;
+}
+
+.comment-form input[type=text]:focus{
+border-color: #86b7fe;
+
+}
+.comment-image{
+border: 1px solid lightgray !important;
+border-radius:50px !important;
+overflow:hidden !important;
+max-width:75% !important;
+padding:0px !important;
+
+}
+@media screen and (max-width:767px){
+.comment-image{
+width: 30px !important;
+}
+}
+.comment-time{
+font-size:12px;
+padding:0px;
+padding-left:12px;
+}
+.comment-section-btn{
+border-radius : 0px !important;
+float : right !important;
+}
+.comment-section-btn2{
+border-radius : 0px !important;
+
+}
+.reply-comment-buttons{
+display : flex;
+flex-direction:row-reverse;
+gap:5px;
+}
+@media screen and (max-width: 780px){
+       .reply-comment-rows{
+              margin-left:50px;
+       }
+}
+.img-thumbnail{
+       filter: drop-shadow(2px 2px 2px #ccc);
+       transition:all ease-in 200ms;
+}
+.img-thumbnail:hover{
+       scale:1.2;
+}
+{% endblock %}
+{% block headerbackgound %}
+url('{{blog.image.url}}')
+{% endblock %}
+{% block body %}
+{% load humanize %}
+{% load extras %}
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v17.0"
+       nonce="Dt92z47P"></script>
+<div class="container my-4 article-container" id="">
+       <div class="row">
+              <div class="col-md-8 mx-auto">
+                     <article>
+                            <h2 class="mb-4">{{ blog.title }}</h2>
+                            <div class="fb-like" data-href="http://127.0.0.1:8000/codepulse/{{blog.slug}}/"
+                                   data-width="" data-layout="" data-action="" data-size="" data-share="true"></div>
+                            <p class="post-meta">
+
+                                   Posted by
+                                   <a href="https://github.com/{{pub_by}}"
+                                          style="text-decoration: none;">{{blog.pub_by}}</a>
+                                   on {{blog.pub_date}} <span>{{blog.views}} Views</span>
+                            </p>
+                            <hr>
+                            <h4>{{ blog.thead0 }}</h4>
+                            <div class="mt-4 first-paragraph">
+                                   <p class="post-content">{{ blog.chead0|safe }}</p>
+                                   
+                                   <img src="{{ blog.thumbnail.url }}" alt="{{blog.thumbnail}}" class="img-thumbnail my-2 ms-2"
+                                          style="height: 200px;object-fit: cover;">
+                            </div>
+
+
+                            <h4>{{ blog.thead1 }}</h4>
+                            <p class="mt-4 post-content">{{ blog.chead1|safe }}</p>
+
+                            <h4>{{ blog.thead2 }}</h4>
+                            <p class="mt-4 post-content">{{ blog.chead2|safe }}</p>
+                     </article>
+              </div>
+       </div>
+</div>
+<div class="comments container">
+       <div class="row">
+              <div class="col-md-8 mx-auto">
+                     <h2 style="font-weight: 700;">Comments {{comments|length}} </h2>
+                     {% if user.is_authenticated %}
+                     <form action="/codepulse/postComment/" method="post"
+                            style="box-sizing: border-box;overflow-x: hidden;" class="comment-form">
+                            {% csrf_token %}
+
+                            <input type="hidden" name="postSlug" id="postSlug" value="{{blog.slug}}">
+                            <input type="hidden" name="parentSno" value="">
+                            <label for="comment" style="margin-left: 6px;" id="comment-label"
+                                   title="down">Comment</label>
+                            <input type="text" name="comment" id="comment">
+
+                            <button type="submit"
+                                   class="btn btn-sm btn-outline-danger mt-2 comment-section-btn">Comment</button>
+
+                     </form>
+                     {% else %}
+                     <p>login to post a comment</p>
+                     <div class="d-flex flex-row-reverse">
+                            <button class="ms-2 btn btn-sm btn-danger text-light" data-bs-toggle="modal"
+                                   data-bs-target="#loginModal">Login</button>
+                     </div>
+                     {% endif %}
+                     {% load static %}
+                     {% for com in comments %}
+
+                     <div class="row my-3 d-flex">
+                            <div class="col-md-1"><img src="{% static './home/userimage.jfif' %}" alt=""
+                                          class="p-2 rounded mx-auto comment-image"></div>
+                            <div class="col-md-11">
+                                   <p><strong><a href="/about" style="text-decoration: none;">@{{com.user.username}}</a>
+                                          </strong>
+                                          <span class="comment-time">{{com.timeStamp|naturaltime}}</span>
+                                   <div>{{com.comment}}</div>
+                                   <div class="reply mx-0">
+                                          {% if user.is_authenticated %}
+                                          <a class="btn btn-sm btn-light" data-bs-toggle="collapse"
+                                                 href="#replybox{{forloop.counter}}" role="button" aria-expanded="false"
+                                                 aria-controls="replybox{{forloop.counter}}">
+                                                 Reply
+                                          </a>
+                                          {% endif %}
+                                          {% if com.sno in parentComment %}
+                                          <a class="btn btn-sm btn-light" data-bs-toggle="collapse"
+                                                 href="#replycomments{{forloop.counter}}" role="button"
+                                                 aria-expanded="false" aria-controls="replycomments{{forloop.counter}}">
+                                                 <span style="text-transform: lowercase;">{{replies|count_replies:com.sno}} replies </span>
+                                          </a>
+                                          <div class="collapse my-2 mx-0 replies" id="replycomments{{forloop.counter}}">
+                                                 {% for r in replies %}
+                                                 {% if r.parent.sno == com.sno %}
+                                                 <div class="row my-3 d-flex reply-comment-rows">
+                                                        <div class="col-md-1"><img
+                                                                      src="{% static './home/userimage.jfif' %}" alt=""
+                                                                      class="p-2 rounded mx-auto comment-image"></div>
+                                                        <div class="col-md-11">
+                                                               <p><strong><a href="/about" style="text-decoration: none;">@{{r.user.username}}</a>
+                                                                      </strong>
+                                                                      <span
+                                                                             class="comment-time">{{r.timeStamp|naturaltime}}</span>
+                                                               <div>{{r.comment}}</div></p>
+                                                        </div>
+                                                 </div>
+                                                 {% endif %}
+                                                 {% endfor %}
+                                          </div>
+                                          {% endif %}
+
+                                          <div class="collapse my-2" id="replybox{{forloop.counter}}">
+                                                 <form action="{% url 'postComment' %}" method="post"
+                                                        style="box-sizing: border-box;overflow-x: hidden;"
+                                                        class="comment-form">
+                                                        {% csrf_token %}
+
+                                                        <input type="hidden" name="parentSno" value="{{com.sno}}">
+                                                        <input type="hidden" name="postSlug"
+                                                               id="postSlug{{forloop.counter}}" value="{{blog.slug}}">
+                                                        <input type="text" name="comment" id="replycomment"
+                                                               placeholder="Add a Reply..." required>
+
+                                                        <div class="reply-comment-buttons">
+                                                               <button class="btn btn-sm btn-outline-danger mt-2 comment-section-btn2"
+                                                                      type="button" data-bs-toggle="collapse"
+                                                                      data-bs-target="#replybox{{forloop.counter}}"
+                                                                      aria-expanded="false"
+                                                                      aria-controls="replybox{{forloop.counter}}">
+                                                                      Cancel
+                                                               </button>
+                                                               <button type="submit"
+                                                                      class="btn btn-sm btn-outline-danger mt-2 comment-section-btn2">Reply</button>
+                                                        </div>
+
+                                                 </form>
+                                          </div>
+                                   </div>
+                                   </p>
+                            </div>
+                     </div>
+
+                     {% endfor %}
+              </div>
+       </div>
+</div>
+<script>
+       $('#comment').click(function () {
+              var label = document.getElementById('comment-label');
+              if (label.title == 'down') {
+                     label.style = 'margin-left: 6px;position: relative;top: 0px;z-index: 2;font-size:10px;opacity:0.6;'
+                     label.title = 'up'
+              }
+
+       })
+
+</script>
+{% endblock %}
