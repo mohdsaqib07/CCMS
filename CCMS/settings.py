@@ -20,8 +20,8 @@ EMAIL_HOST = 'smtp-mail.outlook.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
-EMAIL_HOST_USER = 'saqibturk4092@outlook.com'
-EMAIL_HOST_PASSWORD = 'Air@19004'
+EMAIL_HOST_USER = 'your-email'
+EMAIL_HOST_PASSWORD = 'your-password'
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
