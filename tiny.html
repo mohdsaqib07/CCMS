@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.tiny.cloud/1/2nwms1ms4nm45qt1xbekuujjmb2te7gry8txm55rkg9ufzcf/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+</head>
+
+<style>
+    textarea{
+        height: 80vh ;
+    }
+    button{
+        padding: 12px;
+        background-color: transparent;
+        color: rgb(10, 88, 202);
+        border: 1px solid rgb(10, 88, 202);
+        border-radius: 6px;
+        margin-top: 6px;
+        transition: background-color 200ms ease-in;
+        box-shadow: 2px 2px 3px #ccc;
+        cursor: pointer;
+        margin-bottom: 6px;
+
+    }
+    button:hover{
+        background-color: rgb(10, 88, 202);
+        color: #fff;
+        border: none;
+    }
+</style>
+<body>
+  <textarea id="textarea1">
+    Welcome to TinyMCE!
+  </textarea>
+  <script>
+    tinymce.init({
+      selector: '#textarea1',
+      plugins: 'ai tinycomments mentions anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents mergetags powerpaste tinymcespellchecker autocorrect a11ychecker typography inlinecss preview',
+      toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | align lineheight | tinycomments | checklist numlist bullist indent outdent | emoticons charmap | removeformat | preview',
+
+      tinycomments_mode: 'embedded',
+      tinycomments_author: 'Author name',
+      mergetags_list: [
+        { value: 'First.Name', title: 'First Name' },
+        { value: 'Email', title: 'Email' },
+      ],
+      ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant"))
+    });
+
+  </script>
+  <button id="generate">Get Html</button>
+  <div id="pushhtml">
+
+  </div>
+  <script>
+    generate.onclick = function (e) {  
+        
+        console.log(e)
+        document.getElementById('pushhtml').innerText = tinyMCE.get('textarea1').getContent()
+
+    }
+  </script>
+</body>
+</html>
